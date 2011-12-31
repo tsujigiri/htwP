@@ -78,16 +78,17 @@ BEGIN
 
 		-- ADD should handle regular addition
 		op_a <= "0101"; -- 5
-		op_a <= "0110"; -- 6
+		op_b <= "0110"; -- 6
 		opc <= "0000";
 		wait for 5ns;
 		assert result = "1011"; -- 11
 		assert status(2) = '0'; -- carry
 		assert status(2) = '0'; -- zero
-
+		wait for 5ns;
+		
 		-- ADD should handle overflow on addition
 		op_a <= "1001"; -- 9 
-		op_a <= "1000"; -- 8
+		op_b <= "1000"; -- 8
 		opc <= "0000";
 		wait for 5ns;
 		assert result = "0010"; -- 2
