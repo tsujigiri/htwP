@@ -30,7 +30,7 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity alu is
-  port( op_a, op_b, ops : in   STD_LOGIC_VECTOR (3 downto 0);
+  port( op_a, op_b, opc : in   STD_LOGIC_VECTOR (3 downto 0);
         status, result  : out  STD_LOGIC_VECTOR (3 downto 0));
 end alu;
 
@@ -38,24 +38,22 @@ architecture Behavioral of alu is
   
 begin
 
-  process ( op_a, op_b, ops )
+  process ( op_a, op_b, opc )
     variable carry : std_logic := '0';
 	 variable zero  : std_logic := '0';
-	 variable tmp   : unsigned;
+	 variable tmp   : unsigned(4 downto 0);
   begin
  
     status <= "0000";
     carry := '0';
 	 zero := '0';
  
-    case ops is
+    case opc is
 	 
       when "0000" | "0001" => -- add | addc
 		  tmp := unsigned(op_a) + unsigned(op_b);
-	     result <= std_logic_vector(tmp);
-		  if tmp > 15 then
-		    carry := '1';
-		  end if;
+		  carry := tmp(4);
+	     result <= std_logic_vector(resize(tmp, result'length));
 		  		  
 		when "0010" | "0011" => -- sub | subc
 		  result <= std_logic_vector(unsigned(op_a) - unsigned(op_b));
@@ -77,4 +75,3 @@ begin
   end process;
 
 end Behavioral;
-

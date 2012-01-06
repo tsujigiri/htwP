@@ -31,88 +31,72 @@ USE ieee.std_logic_1164.ALL;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 USE ieee.numeric_std.ALL;
-USE ieee.numeric_std.ALL;
  
 ENTITY alu_test IS
-  port( expected : out STD_LOGIC_VECTOR (3 downto 0));
 END alu_test;
  
 ARCHITECTURE behavior OF alu_test IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
-    COMPONENT alu
-    PORT(
-         op_a : IN  std_logic_vector(3 downto 0);
-         op_b : IN  std_logic_vector(3 downto 0);
-         ops : IN  std_logic_vector(3 downto 0);
-         status : OUT  std_logic_vector(3 downto 0);
-         result : OUT  std_logic_vector(3 downto 0)
-        );
-    END COMPONENT;
-    
+	COMPONENT alu
+	PORT(
+		op_a   : IN  std_logic_vector(3 downto 0);
+		op_b   : IN  std_logic_vector(3 downto 0);
+		opc    : IN  std_logic_vector(3 downto 0);
+		status : OUT std_logic_vector(3 downto 0);
+		result : OUT std_logic_vector(3 downto 0)
+	);
+	END COMPONENT;
 
-   --Inputs
-   signal op_a : std_logic_vector(3 downto 0) := (others => '0');
-   signal op_b : std_logic_vector(3 downto 0) := (others => '0');
-   signal ops : std_logic_vector(3 downto 0) := (others => '0');
 
- 	--Outputs
-   signal status : std_logic_vector(3 downto 0);
-   signal result : std_logic_vector(3 downto 0);
-   -- No clocks detected in port list. Replace <clock> below with 
-   -- appropriate port name 
- 
-BEGIN
- 
-	-- Instantiate the Unit Under Test (UUT)
-   uut: alu PORT MAP (
-          op_a => op_a,
-          op_b => op_b,
-          ops => ops,
-          status => status,
-          result => result
-        );
+	--Inputs
+	signal op_a : std_logic_vector(3 downto 0) := (others => '0');
+	signal op_b : std_logic_vector(3 downto 0) := (others => '0');
+	signal opc : std_logic_vector(3 downto 0) := (others => '0');
 
-   alu_test :process
-	begin
-	  
-	  for i in 0 to 15 loop
-	    op_a <= std_logic_vector(to_unsigned(i,4));
-	    for j in 0 to 15 loop
-		   op_b <= std_logic_vector(to_unsigned(j,4));
-			
-			ops <= "0000";
-			wait for 5ns;
-			assert result = std_logic_vector(to_unsigned(i+j,4));
-			if i + j <= 15 then
-				wait for 5ns;
-				assert status(2) = '0'; -- c
-				wait for 5ns;
-				assert status(3) = '0'; -- z
-			elsif i + j > 15 then
-				wait for 5ns;
-				assert status(2) = '1'; -- c
-				wait for 5ns;
-				assert status(3) = '0'; -- z
-			end if;
-			
-			
-			wait for 5ns;
-			--case i + j > 15 is
-	      --  when true =>
-	      --    assert status(2) = '1';
-	      --  when false =>
-	      --    assert status(2) = '0';
-	      --end case;
-			--wait for 5ns;
-			
-			
-		 end loop;
-	  end loop;
-	  
-	  wait;
-	end process;
+	--Outputs
+	signal status : std_logic_vector(3 downto 0);
+	signal result : std_logic_vector(3 downto 0);
+	-- No clocks detected in port list. Replace <clock> below with 
+	-- appropriate port name 
 	
+BEGIN
+
+	-- Instantiate the Unit Under Test (UUT)
+	uut: alu PORT MAP (
+		op_a => op_a,
+		op_b => op_b,
+		opc => opc,
+		status => status,
+		result => result
+	);
+
+	alu_test :process
+	begin
+	
+		wait for 5ns;
+
+		-- ADD should handle regular addition
+		op_a <= "0101"; -- 5
+		op_a <= "0110"; -- 6
+		opc <= "0000";
+		wait for 5ns;
+		assert result = "1011"; -- 11
+		assert status(2) = '0'; -- carry
+		assert status(2) = '0'; -- zero
+		wait for 5ns;
+
+		-- ADD should handle overflow on addition
+		op_a <= "1001"; -- 9 
+		op_a <= "1000"; -- 8
+		opc <= "0000";
+		wait for 5ns;
+		assert result = "0010"; -- 2
+		assert status(2) = '1'; -- carry
+		assert status(2) = '0'; -- zero
+
+	wait;
+	end process;
 END;
 
