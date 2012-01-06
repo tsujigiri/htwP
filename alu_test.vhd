@@ -41,25 +41,23 @@ ARCHITECTURE behavior OF alu_test IS
  
 	COMPONENT alu
 	PORT(
-		op_a   : IN  std_logic_vector(3 downto 0);
-		op_b   : IN  std_logic_vector(3 downto 0);
-		opc    : IN  std_logic_vector(3 downto 0);
-		status : OUT std_logic_vector(3 downto 0);
-		result : OUT std_logic_vector(3 downto 0);
-		debug  : OUT std_logic_vector(4 downto 0)
+		op_a    : IN  std_logic_vector(3 downto 0);
+		op_b    : IN  std_logic_vector(3 downto 0);
+		alu_ops : IN  std_logic_vector(3 downto 0);
+		status  : OUT std_logic_vector(3 downto 0);
+		result  : OUT std_logic_vector(3 downto 0)
 	);
 	END COMPONENT;
 
 
 	--Inputs
-	signal op_a : std_logic_vector(3 downto 0) := (others => '0');
-	signal op_b : std_logic_vector(3 downto 0) := (others => '0');
-	signal opc : std_logic_vector(3 downto 0) := (others => '0');
+	signal op_a    : std_logic_vector(3 downto 0) := (others => '0');
+	signal op_b    : std_logic_vector(3 downto 0) := (others => '0');
+	signal alu_ops : std_logic_vector(3 downto 0) := (others => '0');
 
 	--Outputs
 	signal status : std_logic_vector(3 downto 0);
 	signal result : std_logic_vector(3 downto 0);
-	signal debug : std_logic_vector(4 downto 0);
 	-- No clocks detected in port list. Replace <clock> below with 
 	-- appropriate port name 
 	
@@ -67,12 +65,11 @@ BEGIN
 
 	-- Instantiate the Unit Under Test (UUT)
 	uut: alu PORT MAP (
-		op_a => op_a,
-		op_b => op_b,
-		opc => opc,
-		status => status,
-		result => result,
-		debug => debug
+		op_a    => op_a,
+		op_b    => op_b,
+		alu_ops => alu_ops,
+		status  => status,
+		result  => result
 	);
 
 	alu_test :process
@@ -83,7 +80,7 @@ BEGIN
 		-- ADD should handle addition
 		op_a <= "0101"; -- 5
 		op_b <= "0110"; -- 6
-		opc <= "0000";
+		alu_ops <= "0000";
 		wait for 5ns;
 		assert result = "1011"; -- 11
 		assert status(2) = '0'; -- carry
@@ -93,7 +90,7 @@ BEGIN
 		-- ADD should handle overflow on addition
 		op_a <= "1001"; -- 9 
 		op_b <= "1000"; -- 8
-		opc <= "0000";
+		alu_ops <= "0000";
 		wait for 5ns;
 		assert result = "0001"; -- 2
 		assert status(2) = '1'; -- carry
@@ -103,7 +100,7 @@ BEGIN
 		-- SUB should handle subtraction
 		op_a <= "1111"; -- 15 
 		op_b <= "1010"; -- 10
-		opc  <= "0010"; -- sub
+		alu_ops <= "0010"; -- sub
 		wait for 5ns;
 		assert result = "0101"; -- 5
 		assert status(2) = '0'; -- carry
@@ -113,7 +110,7 @@ BEGIN
 		-- SUB should handle subtraction with overflow
 		op_a <= "1010"; -- 10 
 		op_b <= "1111"; -- 15
-		opc  <= "0010"; -- sub
+		alu_ops <= "0010"; -- sub
 		wait for 5ns;
 		assert result = "1011"; -- -5
 		assert status(2) = '1'; -- carry
@@ -123,7 +120,7 @@ BEGIN
 		-- AND
 		op_a <= "0101";
 		op_b <= "0110";
-		opc  <= "0100";
+		alu_ops <= "0100";
 		wait for 5ns;
 		assert result = "0100";
 		assert status = "0000";
@@ -132,7 +129,7 @@ BEGIN
 		-- OR
 		op_a <= "0101";
 		op_b <= "0110";
-		opc  <= "0101";
+		alu_ops <= "0101";
 		wait for 5ns;
 		assert result = "0111";
 		assert status = "0000";
@@ -141,7 +138,7 @@ BEGIN
 		-- XOR
 		op_a <= "0101";
 		op_b <= "0110";
-		opc  <= "0110";
+		alu_ops <= "0110";
 		wait for 5ns;
 		assert result = "0011";
 		assert status = "0000";
@@ -149,7 +146,7 @@ BEGIN
 		
 		-- CMPA - not(op_a)
 		op_a <= "0101";
-		opc  <= "0111";
+		alu_ops <= "0111";
 		wait for 5ns;
 		assert result = "1010";
 		assert status = "0000";
