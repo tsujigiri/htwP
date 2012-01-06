@@ -52,15 +52,16 @@ begin
 		case opc is
 		when "0000" | "0001" => -- add | addc
 			tmp := resize(unsigned(op_a), 5) + resize(unsigned(op_b), 5);
-			debug <= std_logic_vector(tmp);
 			carry := tmp(4);
 			result <= std_logic_vector(resize(tmp, result'length));
 
 		when "0010" | "0011" => -- sub | subc
-			result <= std_logic_vector(unsigned(op_a) - unsigned(op_b));
-			if unsigned(op_b) > unsigned(op_a) then
-				carry := '1';
-			end if;
+			tmp := resize(unsigned(op_a), 5) - resize(unsigned(op_b), 5);
+			carry := tmp(4);
+			--if carry = '1' then
+			--	tmp := tmp - "00001";
+			--end if;
+			result <= std_logic_vector(resize(tmp, result'length));
 
 		when "0100" => -- and
 			result <= op_a and op_b;
