@@ -45,7 +45,8 @@ ARCHITECTURE behavior OF alu_test IS
 		op_b   : IN  std_logic_vector(3 downto 0);
 		opc    : IN  std_logic_vector(3 downto 0);
 		status : OUT std_logic_vector(3 downto 0);
-		result : OUT std_logic_vector(3 downto 0)
+		result : OUT std_logic_vector(3 downto 0);
+		debug  : OUT std_logic_vector(3 downto 0)
 	);
 	END COMPONENT;
 

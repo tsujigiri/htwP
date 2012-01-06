@@ -31,47 +31,45 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity alu is
   port( op_a, op_b, opc : in   STD_LOGIC_VECTOR (3 downto 0);
-        status, result  : out  STD_LOGIC_VECTOR (3 downto 0));
+        status, result, debug  : out  STD_LOGIC_VECTOR (3 downto 0));
 end alu;
 
 architecture Behavioral of alu is
   
 begin
 
-  process ( op_a, op_b, opc )
-    variable carry : std_logic := '0';
-	 variable zero  : std_logic := '0';
-	 variable tmp   : unsigned(4 downto 0) := "00000";
-  begin
+	process ( op_a, op_b, opc )
+		variable carry : std_logic := '0';
+		variable zero  : std_logic := '0';
+		variable tmp   : unsigned(4 downto 0) := "00000";
+  	begin
  
-    status <= "0000";
-    carry := '0';
-	 zero := '0';
+		status <= "0000";
+		carry := '0';
+		zero := '0';
  
-    case opc is
-	 
-      when "0000" | "0001" => -- add | addc
-		  tmp := unsigned(op_a) + unsigned(op_b);
-		  carry := tmp(4);
-	     result <= std_logic_vector(resize(tmp, result'length));
-		  		  
+		case opc is
+		when "0000" | "0001" => -- add | addc
+			tmp := unsigned(op_a) + unsigned(op_b);
+			carry := tmp(4);
+			result <= std_logic_vector(resize(tmp, result'length));
+
 		when "0010" | "0011" => -- sub | subc
-		  result <= std_logic_vector(unsigned(op_a) - unsigned(op_b));
-		  if unsigned(op_b) > unsigned(op_a) then
-		    carry := '1';
-		  end if;
-		  
+			result <= std_logic_vector(unsigned(op_a) - unsigned(op_b));
+			if unsigned(op_b) > unsigned(op_a) then
+				carry := '1';
+			end if;
+
 		when "0100" => -- and
-		  result <= op_a and op_b;
-		  
+			result <= op_a and op_b;
+
 		when others => result <= "1111";
-    end case;
-	 
-	 status(2) <= carry;
-	 if tmp = 0 then
-	   status(3) <= '1';
-	 end if;
-	 
-  end process;
+		end case;
+
+		status(2) <= carry;
+		if tmp = 0 then
+			status(3) <= '1';
+		end if;
+	end process;
 
 end Behavioral;
