@@ -47,19 +47,19 @@ begin
 		zero <= '0';
 		carry <= '0';
 		
-		case sru_ops is
-		when "000" => -- SRL (shift right logical)
+		case resize(unsigned(sru_ops),2) is
+		when "00" => -- SRL (shift right logical)
 		carry <= data_in(0);
 		result <= std_logic_vector(shift_right(unsigned(data_in), to_integer(unsigned(bit_to_move))));
 
-		when "001" => -- SLL (shift left logical)
+		when "01" => -- SLL (shift left logical)
 		carry <= data_in(3);
 		result <= std_logic_vector(shift_left(unsigned(data_in), to_integer(unsigned(bit_to_move))));
 
-		when "010" => -- ROR (rotate right)
+		when "10" => -- ROR (rotate right)
 		result <= std_logic_vector(rotate_right(unsigned(data_in), to_integer(unsigned(bit_to_move))));
 
-		when "011" => -- ROL (rotate left)
+		when "11" => -- ROL (rotate left)
 		result <= std_logic_vector(rotate_left(unsigned(data_in), to_integer(unsigned(bit_to_move))));
 
 		when others => result <= "1111";
