@@ -31,7 +31,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity alu is
   port( op_a, op_b, opc : in   STD_LOGIC_VECTOR (3 downto 0);
-        status, result  : out  STD_LOGIC_VECTOR (3 downto 0));
+        status, result : out  STD_LOGIC_VECTOR (3 downto 0);
+		  debug : out  STD_LOGIC_VECTOR (4 downto 0));
 end alu;
 
 architecture Behavioral of alu is
@@ -50,7 +51,8 @@ begin
  
 		case opc is
 		when "0000" | "0001" => -- add | addc
-			tmp := unsigned(op_a) + unsigned(op_b);
+			tmp := resize(unsigned(op_a), 5) + resize(unsigned(op_b), 5);
+			debug <= std_logic_vector(tmp);
 			carry := tmp(4);
 			result <= std_logic_vector(resize(tmp, result'length));
 
