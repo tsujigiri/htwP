@@ -45,8 +45,7 @@ ARCHITECTURE behavior OF alu_test IS
 		op_b   : IN  std_logic_vector(3 downto 0);
 		opc    : IN  std_logic_vector(3 downto 0);
 		status : OUT std_logic_vector(3 downto 0);
-		result : OUT std_logic_vector(3 downto 0);
-		debug  : OUT std_logic_vector(3 downto 0)
+		result : OUT std_logic_vector(3 downto 0)
 	);
 	END COMPONENT;
 
@@ -59,7 +58,6 @@ ARCHITECTURE behavior OF alu_test IS
 	--Outputs
 	signal status : std_logic_vector(3 downto 0);
 	signal result : std_logic_vector(3 downto 0);
-	signal debug  : std_logic_vector(3 downto 0);
 	-- No clocks detected in port list. Replace <clock> below with 
 	-- appropriate port name 
 	
@@ -71,8 +69,7 @@ BEGIN
 		op_b => op_b,
 		opc => opc,
 		status => status,
-		result => result,
-		debug  => debug
+		result => result
 	);
 
 	alu_test :process
