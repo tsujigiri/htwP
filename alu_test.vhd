@@ -98,6 +98,7 @@ BEGIN
 		assert result = "0001"; -- 2
 		assert status(2) = '1'; -- carry
 		assert status(3) = '0'; -- zero
+		wait for 5ns;
 
 		-- SUB should handle subtraction
 		op_a <= "1111"; -- 15 
@@ -107,16 +108,27 @@ BEGIN
 		assert result = "0101"; -- 5
 		assert status(2) = '0'; -- carry
 		assert status(3) = '0'; -- zero
+		wait for 5ns;
 
 		-- SUB should handle subtraction with overflow
 		op_a <= "1010"; -- 10 
 		op_b <= "1111"; -- 15
 		opc  <= "0010"; -- sub
 		wait for 5ns;
-		assert result = "1010"; -- 10
+		assert result = "1011"; -- -5
 		assert status(2) = '1'; -- carry
 		assert status(3) = '0'; -- zero
+		wait for 5ns;
 
+		-- AND
+		op_a <= "0101";
+		op_b <= "0110";
+		opc  <= "0100";
+		wait for 5ns;
+		assert result = "0100";
+		assert status = "0000";
+		wait for 5ns;
+		
 	wait;
 	end process;
 END;
