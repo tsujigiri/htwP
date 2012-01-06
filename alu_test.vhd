@@ -77,9 +77,9 @@ BEGIN
 	
 		wait for 5ns;
 
-		-- ADD should handle regular addition
+		-- ADD should handle addition
 		op_a <= "0101"; -- 5
-		op_a <= "0110"; -- 6
+		op_b <= "0110"; -- 6
 		opc <= "0000";
 		wait for 5ns;
 		assert result = "1011"; -- 11

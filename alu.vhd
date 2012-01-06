@@ -41,7 +41,7 @@ begin
   process ( op_a, op_b, opc )
     variable carry : std_logic := '0';
 	 variable zero  : std_logic := '0';
-	 variable tmp   : unsigned(4 downto 0);
+	 variable tmp   : unsigned(4 downto 0) := "00000";
   begin
  
     status <= "0000";
