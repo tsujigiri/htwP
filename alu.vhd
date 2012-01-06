@@ -44,6 +44,7 @@ begin
 		variable tmp   : unsigned(4 downto 0) := "00000";
   	begin
  
+		debug <= "0000";
 		status <= "0000";
 		carry := '0';
 		zero := '0';
