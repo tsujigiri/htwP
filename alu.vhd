@@ -51,6 +51,8 @@ begin
  
 		case opc is
 		when "0000" | "0001" => -- add | addc
+			tmp := "01010";
+			debug <= std_logic_vector(resize(tmp,4));
 			tmp := unsigned(op_a) + unsigned(op_b);
 			carry := tmp(4);
 			result <= std_logic_vector(resize(tmp, result'length));
