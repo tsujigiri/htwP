@@ -129,6 +129,32 @@ BEGIN
 		assert status = "0000";
 		wait for 5ns;
 		
+		-- OR
+		op_a <= "0101";
+		op_b <= "0110";
+		opc  <= "0101";
+		wait for 5ns;
+		assert result = "0111";
+		assert status = "0000";
+		wait for 5ns;
+
+		-- XOR
+		op_a <= "0101";
+		op_b <= "0110";
+		opc  <= "0110";
+		wait for 5ns;
+		assert result = "0011";
+		assert status = "0000";
+		wait for 5ns;
+		
+		-- CMPA - not(op_a)
+		op_a <= "0101";
+		opc  <= "0111";
+		wait for 5ns;
+		assert result = "1010";
+		assert status = "0000";
+		wait for 5ns;
+		
 	wait;
 	end process;
 END;

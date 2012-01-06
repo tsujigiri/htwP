@@ -66,6 +66,15 @@ begin
 		when "0100" => -- and
 			result <= op_a and op_b;
 
+		when "0101" => -- or
+			result <= op_a or op_b;
+
+		when "0110" => -- xor
+			result <= op_a xor op_b;
+
+		when "0111" => -- cmpa
+			result <= not(op_a);
+
 		when others => result <= "1111";
 		end case;
 
