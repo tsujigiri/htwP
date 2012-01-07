@@ -27,9 +27,6 @@
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
- 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
 USE ieee.numeric_std.ALL;
  
 ENTITY sru_test IS
@@ -39,25 +36,25 @@ ARCHITECTURE behavior OF sru_test IS
 
     COMPONENT sru
     PORT(
-         data_in : IN  std_logic_vector(3 downto 0);
-         sru_ops : IN  std_logic_vector(2 downto 0);
-         bit_to_move : IN  std_logic_vector(1 downto 0);
-         result : OUT  std_logic_vector(3 downto 0);
-         zero : OUT  std_logic;
-         carry : OUT  std_logic
+         data_in     : IN  std_logic_vector(7 downto 0);
+         sru_ops     : IN  std_logic_vector(2 downto 0);
+         bit_to_move : IN  std_logic_vector(2 downto 0);
+         result      : OUT std_logic_vector(7 downto 0);
+         zero        : OUT std_logic;
+         carry       : OUT std_logic
         );
     END COMPONENT;
     
 
    --Inputs
-   signal data_in : std_logic_vector(3 downto 0) := (others => '0');
-   signal sru_ops : std_logic_vector(2 downto 0) := (others => '0');
-   signal bit_to_move : std_logic_vector(1 downto 0) := (others => '0');
+   signal data_in     : std_logic_vector(7 downto 0) := (others => '0');
+   signal sru_ops     : std_logic_vector(2 downto 0) := (others => '0');
+   signal bit_to_move : std_logic_vector(2 downto 0) := (others => '0');
 
  	--Outputs
-   signal result : std_logic_vector(3 downto 0);
-   signal zero : std_logic;
-   signal carry : std_logic;
+   signal result : std_logic_vector(7 downto 0);
+   signal zero   : std_logic;
+   signal carry  : std_logic;
 
 BEGIN
  
@@ -76,56 +73,56 @@ BEGIN
 		wait for 5ns;
 
 		-- SRL should shift right
-		data_in <= "1010";
+		data_in <= "10101010";
 		sru_ops <= "000";
 		bit_to_move <= "01";
 		wait for 5ns;
-		assert result = "0101";
+		assert result = "01010101";
 		assert carry = '0';
 		wait for 5ns;
 		
-		-- SRL should shift right with carry
-		data_in <= "0101";
+		-- SRL should shift right with carry out
+		data_in <= "01010101";
 		sru_ops <= "000";
 		bit_to_move <= "01";
 		wait for 5ns;
-		assert result = "0010";
+		assert result = "00101010";
 		assert carry = '1';
 		wait for 5ns;
 		
 		-- SLL should shift left
-		data_in <= "0101";
+		data_in <= "01010101";
 		sru_ops <= "001";
 		bit_to_move <= "01";
 		wait for 5ns;
-		assert result = "1010";
+		assert result = "10101010";
 		assert carry = '0';
 		wait for 5ns;
 		
-		-- SLL should shift left with carry
-		data_in <= "1010";
+		-- SLL should shift left with carry out
+		data_in <= "10101010";
 		sru_ops <= "001";
 		bit_to_move <= "01";
 		wait for 5ns;
-		assert result = "0100";
+		assert result = "01010100";
 		assert carry = '1';
 		wait for 5ns;
 		
 		-- ROR should rotate right
-		data_in <= "0101";
+		data_in <= "01010001";
 		sru_ops <= "010";
 		bit_to_move <= "01";
 		wait for 5ns;
-		assert result = "1010";
+		assert result = "10101000";
 		assert carry = '0';
 		wait for 5ns;
 		
 		-- ROL should rotate left
-		data_in <= "1010";
+		data_in <= "10101000";
 		sru_ops <= "011";
 		bit_to_move <= "01";
 		wait for 5ns;
-		assert result = "0101";
+		assert result = "01010001";
 		assert carry = '0';
 		wait for 5ns;
 
