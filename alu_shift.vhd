@@ -94,5 +94,12 @@ begin
 		carry       => sru_carry
 	);
 	
+	alu_ops <= (aluCtrl(2), aluCtrl(1), aluCtrl(0));
+	sru_ops <= (aluCtrl(2), aluCtrl(1), aluCtrl(0));
+	alu_op_a <= op_a;
+	alu_op_b <= op_b;
+	sru_op_a <= op_a;
+	sru_op_b <= op_b;
+	alu_carry_in <= carry_in;
+	
 end rtl;
-
