@@ -41,26 +41,22 @@ ARCHITECTURE behavior OF alu_test IS
  
 	COMPONENT alu
 	PORT(
-		op_a    : IN  std_logic_vector(3 downto 0);
-		op_b    : IN  std_logic_vector(3 downto 0);
-		alu_ops : IN  std_logic_vector(3 downto 0);
-		status  : OUT std_logic_vector(3 downto 0);
-		result  : OUT std_logic_vector(3 downto 0)
+		op_a, op_b : IN  std_logic_vector(7 downto 0);
+		alu_ops    : IN  std_logic_vector(2 downto 0);
+		status     : OUT std_logic_vector(3 downto 0);
+		result     : OUT std_logic_vector(7 downto 0)
 	);
 	END COMPONENT;
 
-
 	--Inputs
-	signal op_a    : std_logic_vector(3 downto 0) := (others => '0');
-	signal op_b    : std_logic_vector(3 downto 0) := (others => '0');
-	signal alu_ops : std_logic_vector(3 downto 0) := (others => '0');
+	signal op_a    : std_logic_vector(7 downto 0) := (others => '0');
+	signal op_b    : std_logic_vector(7 downto 0) := (others => '0');
+	signal alu_ops : std_logic_vector(2 downto 0) := (others => '0');
 
 	--Outputs
 	signal status : std_logic_vector(3 downto 0);
-	signal result : std_logic_vector(3 downto 0);
-	-- No clocks detected in port list. Replace <clock> below with 
-	-- appropriate port name 
-	
+	signal result : std_logic_vector(7 downto 0);
+
 BEGIN
 
 	-- Instantiate the Unit Under Test (UUT)
@@ -78,77 +74,77 @@ BEGIN
 		wait for 5ns;
 
 		-- ADD should handle addition
-		op_a <= "0101"; -- 5
-		op_b <= "0110"; -- 6
-		alu_ops <= "0000";
+		op_a <= "01100100"; -- 100
+		op_b <= "00010100"; -- 20
+		alu_ops <= "000";
 		wait for 5ns;
-		assert result = "1011"; -- 11
+		assert result = "01111000"; -- 120
 		assert status(2) = '0'; -- carry
 		assert status(2) = '0'; -- zero
 		wait for 5ns;
 
 		-- ADD should handle overflow on addition
-		op_a <= "1001"; -- 9 
-		op_b <= "1000"; -- 8
-		alu_ops <= "0000";
+		op_a <= "01100100"; -- 100 
+		op_b <= "11001000"; -- 200
+		alu_ops <= "000";
 		wait for 5ns;
-		assert result = "0001"; -- 2
+		assert result = "00101100"; -- 300
 		assert status(2) = '1'; -- carry
 		assert status(3) = '0'; -- zero
 		wait for 5ns;
 
 		-- SUB should handle subtraction
-		op_a <= "1111"; -- 15 
-		op_b <= "1010"; -- 10
-		alu_ops <= "0010"; -- sub
+		op_a <= "11001000"; -- 200
+		op_b <= "01100100"; -- 100 
+		alu_ops <= "010"; -- sub
 		wait for 5ns;
-		assert result = "0101"; -- 5
+		assert result = "01100100"; -- 100
 		assert status(2) = '0'; -- carry
 		assert status(3) = '0'; -- zero
 		wait for 5ns;
 
 		-- SUB should handle subtraction with overflow
-		op_a <= "1010"; -- 10 
-		op_b <= "1111"; -- 15
-		alu_ops <= "0010"; -- sub
+		op_a <= "01100100"; -- 100
+		op_b <= "11001000"; -- 200 
+		alu_ops <= "010"; -- sub
 		wait for 5ns;
-		assert result = "1011"; -- -5
+		assert result = "10011100"; -- -100
 		assert status(2) = '1'; -- carry
 		assert status(3) = '0'; -- zero
 		wait for 5ns;
 
 		-- AND
-		op_a <= "0101";
-		op_b <= "0110";
-		alu_ops <= "0100";
+		op_a <= "01010110";
+		op_b <= "01100101";
+		alu_ops <= "100";
 		wait for 5ns;
-		assert result = "0100";
+		assert result = "01000100";
 		assert status = "0000";
 		wait for 5ns;
 		
 		-- OR
-		op_a <= "0101";
-		op_b <= "0110";
-		alu_ops <= "0101";
+		op_a <= "01010110";
+		op_b <= "01100101";
+		alu_ops <= "101";
 		wait for 5ns;
-		assert result = "0111";
+		assert result = "01110111";
 		assert status = "0000";
 		wait for 5ns;
 
 		-- XOR
-		op_a <= "0101";
-		op_b <= "0110";
-		alu_ops <= "0110";
+		op_a <= "01010110";
+		op_b <= "01100101";
+		alu_ops <= "110";
 		wait for 5ns;
-		assert result = "0011";
+		assert result = "00110011";
 		assert status = "0000";
 		wait for 5ns;
 		
 		-- CMPA - not(op_a)
-		op_a <= "0101";
-		alu_ops <= "0111";
+		op_a <= "01010110";
+		alu_ops <= "111";
 		wait for 5ns;
-		assert result = "1010";
+		assert result = "10101001";
 		assert status = "0000";
 		wait for 5ns;
 		

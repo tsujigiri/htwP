@@ -31,8 +31,10 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity alu is
 	port(
-		op_a, op_b, alu_ops : in   STD_LOGIC_VECTOR (3 downto 0);
-		status, result : out  STD_LOGIC_VECTOR (3 downto 0)
+		op_a, op_b : in  STD_LOGIC_VECTOR (7 downto 0);
+		alu_ops    : in  STD_LOGIC_VECTOR (2 downto 0);
+		status     : out STD_LOGIC_VECTOR (3 downto 0);
+		result     : out STD_LOGIC_VECTOR (7 downto 0)
 	);
 end alu;
 
@@ -42,7 +44,7 @@ begin
 	process ( op_a, op_b, alu_ops )
 		variable carry : std_logic := '0';
 		variable zero  : std_logic := '0';
-		variable tmp   : unsigned(4 downto 0) := "00000";
+		variable tmp   : unsigned(8 downto 0) := "000000000";
   	begin
  
 		status <= "0000";
@@ -50,32 +52,29 @@ begin
 		zero := '0';
  
 		case alu_ops is
-		when "0000" | "0001" => -- add | addc
-			tmp := resize(unsigned(op_a), 5) + resize(unsigned(op_b), 5);
-			carry := tmp(4);
+		when "000" | "001" => -- add | addc
+			tmp := resize(unsigned(op_a), tmp'length) + resize(unsigned(op_b), tmp'length);
+			carry := tmp(result'length);
 			result <= std_logic_vector(resize(tmp, result'length));
 
-		when "0010" | "0011" => -- sub | subc
-			tmp := resize(unsigned(op_a), 5) - resize(unsigned(op_b), 5);
-			carry := tmp(4);
-			--if carry = '1' then
-			--	tmp := tmp - "00001";
-			--end if;
+		when "010" | "011" => -- sub | subc
+			tmp := resize(unsigned(op_a), tmp'length) - resize(unsigned(op_b), tmp'length);
+			carry := tmp(result'length);
 			result <= std_logic_vector(resize(tmp, result'length));
 
-		when "0100" => -- and
+		when "100" => -- and
 			result <= op_a and op_b;
 
-		when "0101" => -- or
+		when "101" => -- or
 			result <= op_a or op_b;
 
-		when "0110" => -- xor
+		when "110" => -- xor
 			result <= op_a xor op_b;
 
-		when "0111" => -- cmpa
+		when "111" => -- cmpa
 			result <= not(op_a);
 
-		when others => result <= "1111";
+		when others => result <= "11111111";
 		end case;
 
 		status(2) <= carry;
