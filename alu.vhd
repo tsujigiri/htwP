@@ -25,6 +25,7 @@ entity alu is
 	port(
 		op_a, op_b : in  STD_LOGIC_VECTOR (7 downto 0);
 		alu_ops    : in  STD_LOGIC_VECTOR (2 downto 0);
+		carry_in   : in  STD_LOGIC;
 		status     : out STD_LOGIC_VECTOR (3 downto 0);
 		result     : out STD_LOGIC_VECTOR (7 downto 0)
 	);
@@ -33,11 +34,11 @@ end alu;
 architecture Behavioral of alu is
   
 begin
-	process ( op_a, op_b, alu_ops )
+	process ( op_a, op_b, alu_ops, carry_in )
 		variable carry : std_logic := '0';
 		variable zero  : std_logic := '0';
 		variable tmp   : unsigned(8 downto 0) := "000000000";
-  	begin
+	begin
  
 		status <= "0000";
 		carry := '0';
@@ -46,11 +47,17 @@ begin
 		case alu_ops is
 		when "000" | "001" => -- add | addc
 			tmp := resize(unsigned(op_a), tmp'length) + resize(unsigned(op_b), tmp'length);
+			if alu_ops(0) = '1' and carry_in = '1' then
+				tmp := tmp + 1;
+			end if;
 			carry := tmp(result'length);
 			result <= std_logic_vector(resize(tmp, result'length));
 
 		when "010" | "011" => -- sub | subc
 			tmp := resize(unsigned(op_a), tmp'length) - resize(unsigned(op_b), tmp'length);
+			if alu_ops(0) = '1' and carry_in = '1' then
+				tmp := tmp - 1;
+			end if;
 			carry := tmp(result'length);
 			result <= std_logic_vector(resize(tmp, result'length));
 
