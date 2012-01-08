@@ -54,52 +54,81 @@ architecture rtl of alu_shift is
 		zero, carry : out std_logic
 	);
 	end component;
+	
+	COMPONENT mux
+		PORT(
+			input0 : IN  std_logic_vector(7 downto 0);
+			input1 : IN  std_logic_vector(7 downto 0);
+			output : OUT std_logic_vector(7 downto 0);
+			ctl    : IN  std_logic
+		);
+	END COMPONENT;
+    
+	-- signals: MUX
+	--Inputs
+	signal mux0_in0 : std_logic_vector(7 downto 0) := (others => '0');
+	signal mux0_in1 : std_logic_vector(7 downto 0) := (others => '0');
+	signal mux0_ctl : std_logic := '0';
+ 	--Outputs
+	signal mux0_out : std_logic_vector(7 downto 0);
 
 	-- signals: ALU
 	-- inputs
-	signal alu_op_a     : std_logic_vector(7 downto 0) := (others => '0');
-	signal alu_op_b     : std_logic_vector(7 downto 0) := (others => '0');
-	signal alu_ops      : std_logic_vector(2 downto 0) := (others => '0');
-	signal alu_carry_in : std_logic := '0';
+	signal alu0_op_a     : std_logic_vector(7 downto 0) := (others => '0');
+	signal alu0_op_b     : std_logic_vector(7 downto 0) := (others => '0');
+	signal alu0_ops      : std_logic_vector(2 downto 0) := (others => '0');
+	signal alu0_carry_in : std_logic := '0';
 	-- outputs
-	signal alu_status   : std_logic_vector(3 downto 0);
-	signal alu_result   : std_logic_vector(7 downto 0);
+	signal alu0_status   : std_logic_vector(3 downto 0);
+	signal alu0_result   : std_logic_vector(7 downto 0);
 	
 	-- signals: SRU
 	-- inputs
-	signal sru_data_in         : std_logic_vector (7 downto 0) := (others => '0');
-	signal sru_ops             : std_logic_vector (2 downto 0) := (others => '0');
-	signal sru_bit_to_move     : std_logic_vector (2 downto 0) := (others => '0');
+	signal sru0_data_in         : std_logic_vector (7 downto 0) := (others => '0');
+	signal sru0_ops             : std_logic_vector (2 downto 0) := (others => '0');
+	signal sru0_bit_to_move     : std_logic_vector (2 downto 0) := (others => '0');
 	-- outputs
-	signal sru_result          : std_logic_vector (7 downto 0) := (others => '0');
-	signal sru_zero, sru_carry : std_logic := '0';
+	signal sru0_result          : std_logic_vector (7 downto 0) := (others => '0');
+	signal sru0_zero, sru0_carry : std_logic := '0';
 
 begin
 
 	alu0: alu PORT MAP (
-		op_a     => alu_op_a,
-		op_b     => alu_op_b,
-		alu_ops  => alu_ops,
-		carry_in => alu_carry_in,
-		status   => alu_status,
-		result   => alu_result
+		op_a     => alu0_op_a,
+		op_b     => alu0_op_b,
+		alu_ops  => alu0_ops,
+		carry_in => alu0_carry_in,
+		status   => alu0_status,
+		result   => alu0_result
 	);
 
 	sru0: sru port map (
-		data_in     => sru_data_in,
-		sru_ops     => sru_ops,
-		bit_to_move => sru_bit_to_move,
-		result      => sru_result,
-		zero        => sru_zero,
-		carry       => sru_carry
+		data_in     => sru0_data_in,
+		sru_ops     => sru0_ops,
+		bit_to_move => sru0_bit_to_move,
+		result      => sru0_result,
+		zero        => sru0_zero,
+		carry       => sru0_carry
 	);
 	
-	alu_ops <= (aluCtrl(2), aluCtrl(1), aluCtrl(0));
-	sru_ops <= (aluCtrl(2), aluCtrl(1), aluCtrl(0));
-	alu_op_a <= op_a;
-	alu_op_b <= op_b;
-	sru_op_a <= op_a;
-	sru_op_b <= op_b;
-	alu_carry_in <= carry_in;
+	mux0: mux port map (
+		input0 => mux0_in0,
+		input1 => mux0_in1,
+		ctl    => mux0_ctl,
+		output => mux0_out
+	);
+	
+	alu0_ops      <= (aluCtrl(2), aluCtrl(1), aluCtrl(0));
+	sru0_ops      <= (aluCtrl(2), aluCtrl(1), aluCtrl(0));
+	alu0_op_a     <= op_a;
+	alu0_op_b     <= op_b;
+	sru0_op_a     <= op_a;
+	sru0_op_b     <= op_b;
+	alu0_carry_in <= carry_in;
+	mux0_ctl      <= aluCtrl(3);
+	mux0_in0      <= alu0_result;
+	mux0_in1      <= sru0_result;
+	alu_out       <= mux0_out;
 	
 end rtl;
+
