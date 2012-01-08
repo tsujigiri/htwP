@@ -24,7 +24,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity sru is
 	port(
 		data_in     : in  std_logic_vector (7 downto 0);
-		sru_ops     : in  std_logic_vector (2 downto 0);
+		sru_ops     : in  std_logic_vector (1 downto 0);
 		bit_to_move : in  std_logic_vector (2 downto 0);
 		result      : out std_logic_vector (7 downto 0);
 		zero, carry : out std_logic
@@ -39,7 +39,7 @@ begin
 		zero <= '0';
 		carry <= '0';
 		
-		case resize(unsigned(sru_ops),2) is
+		case sru_ops is
 		when "00" => -- SRL (shift right logical)
 		carry <= data_in(0);
 		result <= std_logic_vector(shift_right(unsigned(data_in), to_integer(unsigned(bit_to_move))));
