@@ -41,12 +41,11 @@ ARCHITECTURE behavior OF mux_test IS
          ctl    : IN  std_logic
         );
     END COMPONENT;
-    
 
    --Inputs
    signal input0 : std_logic_vector(7 downto 0) := (others => '0');
    signal input1 : std_logic_vector(7 downto 0) := (others => '0');
-   signal ctl : std_logic := '0';
+   signal ctl    : std_logic := '0';
  	--Outputs
    signal output : std_logic_vector(7 downto 0);
 

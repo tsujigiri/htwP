@@ -33,7 +33,7 @@ entity alu_shift is
            alu_out   : out  STD_LOGIC_VECTOR (7 downto 0));
 end alu_shift;
 
-architecture rtl of alu_shift is
+architecture structural of alu_shift is
 
 	COMPONENT alu
 	PORT(
@@ -110,11 +110,11 @@ architecture rtl of alu_shift is
 
 	-- signals: SRU
 	-- inputs
-	signal sru0_data_in         : std_logic_vector (7 downto 0) := (others => '0');
-	signal sru0_ops             : std_logic_vector (1 downto 0) := (others => '0');
-	signal sru0_bit_to_move     : std_logic_vector (2 downto 0) := (others => '0');
-	-- outputs
-	signal sru0_result          : std_logic_vector (7 downto 0) := (others => '0');
+	signal sru0_data_in          : std_logic_vector (7 downto 0) := (others => '0');
+	signal sru0_ops              : std_logic_vector (1 downto 0) := (others => '0');
+	signal sru0_bit_to_move      : std_logic_vector (2 downto 0) := (others => '0');
+	-- outputs                   
+	signal sru0_result           : std_logic_vector (7 downto 0) := (others => '0');
 	signal sru0_zero, sru0_carry : std_logic := '0';
 
 begin
@@ -161,7 +161,7 @@ begin
 	-- opcode
 	alu0_ops        <= (aluCtrl(2), aluCtrl(1), aluCtrl(0));
 	sru0_ops        <= (aluCtrl(1), aluCtrl(0));
-	mux_result_ctl  <= aluCtrl(3);
+	sru0_bit_to_move <= "001";
 
 	-- operands
 	alu0_op_a       <= op_a;
@@ -171,7 +171,8 @@ begin
 	-- carry
 	alu0_carry_in   <= carry_in;
 	mux_carry_in0   <= alu0_status(2);
-	mux_carry_in1   <= '0';
+	mux_carry_in1   <= sru0_carry;
+	mux_carry_ctl   <= aluCtrl(3);
 	carry_out       <= mux_carry_out;
 
 	-- zero
@@ -182,6 +183,7 @@ begin
 	--result
 	mux_result_in0 <= alu0_result;
 	mux_result_in1 <= sru0_result;
+	mux_result_ctl <= aluCtrl(3);
 	alu_out        <= mux_result_out;
 
-end rtl;
+end structural;
