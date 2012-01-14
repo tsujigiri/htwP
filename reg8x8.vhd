@@ -27,14 +27,20 @@ architecture Behavioral of reg8x8 is
 	signal regBank : r_array;
 	
 	signal dataIn : std_logic_vector(7 downto 0);
+	signal rbAddr : std_logic_vector(2 downto 0);
 	
 begin
-	ra <= regBank(to_integer(unsigned(raAddr)));
+
+	rbAddr <= rbPort0 when rbSel = '0'
+		  else rbPort1 when rbSel = '1';
 	dataIn <= wrPort0 when wrSrc = "00"
 		  else wrPort1 when wrSrc = "01"
 		  else wrPort2 when wrSrc = "10"
 		  else wrPort3 when wrSrc = "11"
 		  else "11111111";
+
+	ra <= regBank(to_integer(unsigned(raAddr)));
+	rb <= regBank(to_integer(unsigned(rbAddr)));
 
 	write: process(reset, clk)
 	begin

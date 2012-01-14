@@ -93,15 +93,21 @@ BEGIN
 		wrSrc <= "00";
 		weSel <= "000";
 		raAddr <= "000";
+		
+		rbPort0 <= "010";
+		rbPort1 <= "001";
+		rbSel   <= '0';
 
 		wait for clk_period;
 
 		-- write and read regBank(0)
 		assert ra = "00000000";
+		assert rb = "00000000";
 		wait for clk_period;
 		we <= '1';
 		wait for clk_period;
 		assert ra = wrPort0;
+		assert rb = "00000000";
 		wait for clk_period*2;
 		
 		reset <= '1';
@@ -126,11 +132,30 @@ BEGIN
 		reset <= '0';
 		
 		-- wrPort2 -> regBank(5) -> ra
+		-- wrPort3 -> regBank(3) -> rb
+		we <= '0';
+		wait for clk_period;
 		wrSrc <= "10";
 		weSel <= "101";
+		wait for clk_period;
+		we <= '1';
+		wait for clk_period;
+		we <= '0';
+		wait for clk_period;
+		wrSrc <= "11";
+		weSel <= "100";
+		wait for clk_period;
+		we <= '1';
+		wait for clk_period;
+		we <= '0';
+		wait for clk_period;
+		
 		raAddr <= "101";
+		rbPort1 <= "100";
+		rbSel <= '1';
 		wait for clk_period;
 		assert ra = wrPort2;
+		assert rb = wrPort3;
 
 		wait;
 	end process;
