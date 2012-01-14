@@ -1,22 +1,3 @@
-----------------------------------------------------------------------------------
--- Company:
--- Engineer:
---
--- Create Date:    13:35:35 01/07/2012
--- Design Name:
--- Module Name:    alu_shift - Behavioral
--- Project Name:
--- Target Devices:
--- Tool versions:
--- Description:
---
--- Dependencies:
---
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
---
-----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
